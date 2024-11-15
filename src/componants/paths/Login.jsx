@@ -1,10 +1,22 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Provider/AuthProvider";
 
 const Login = () => {
 
-    const {signInUser} =useContext(AuthContext);
+  const navigate = useNavigate();
+
+    const {signInUser, signInWithGoogle} =useContext(AuthContext);
+
+
+     const  handleGoogleSignIn = ()=>{
+      signInWithGoogle()
+      .then((res)=>{
+        console.log(res.user);
+        navigate('/');
+      })
+      .catch((err)=> console.log(err.code) );
+     }
 
     const handleLogin = (e) =>{
         e.preventDefault();
@@ -16,6 +28,8 @@ const Login = () => {
         signInUser(email,password)
         .then(res =>{
             console.log(res.user);
+            e.target.reset();
+            navigate('/')
         })
         .catch((error) =>{
             console.log(error.code);
@@ -67,6 +81,8 @@ const Login = () => {
             </div>
           </form>
           <p className="mx-auto py-4">New to the website? please <Link to="/register" className="text-blue-600 font-bold">SignUp</Link> </p>
+       
+          <p className="mx-auto py-2" onClick={handleGoogleSignIn} >SignIn with <span className="text-blue-600 font-bold shadow-lg py-1 px-2 rounded-xl" >Google</span></p>
         </div>
       </div>
     </div>
